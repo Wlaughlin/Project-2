@@ -1,0 +1,1 @@
+{ "supplychain":{ "attributes":{"title": "API Test"}, "stops":[ { "local_stop_id":1,"id":1,"geometry": "POINT(-9349165.430522 4044184.943345)", "attributes":{ "title":"Facility Red" } } ], "hops":[] } }
