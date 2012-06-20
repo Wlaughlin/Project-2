@@ -12,16 +12,65 @@ Heylo thur
     <script type="text/javascript"
       src="http://maps.googleapis.com/maps/api/js?key=AIzaSyBV7iV0eIHKxPkBIGtJb0020G-X1g4wg8E&sensor=false">
     </script>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript">
-      function initialize() {
+   
+var map;
+var supplylines;
+
+   function initialize() {
         var myOptions = {
-          center: new google.maps.LatLng(-34.397, 150.644),
-          zoom: 8,
+          center: new google.maps.LatLng(40, -20),
+          zoom: 3,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        var map = new google.maps.Map(document.getElementById("map_canvas"),
-            myOptions);
+
+       
+   map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+   
+   var lineOptions = {
+       strokeColor: "black",
+       strokeOpacity: 1.0,
+       strokeWeight: 3
+   }
+  
+
+  supplylines = new google.maps.Polyline(lineOptions);
+  supplylines.setMap(map);
+
+  google.maps.event.addListener(map, 'dblclick', addStop);
+//  var kLayer = new google.maps.kmlLayer('http://www.sourcemap.com/services/supplychain/744?f=kml');
+//   kLayer.setMap(map);
+}
+
+  function addStop(event) {
+      var markerName =  prompt("What is the name of this location?", "Type location name here");
+      if (markerName!=null){
+          if (markerName=="Type location name here") markerName="Untitled Location";
+          var newMarker = new google.maps.Marker({
+          position: event.latLng,
+          title: markerName,
+          map:map
+      });
+          var descriptionInfo = prompt("Would you like to add a description?", "Type description here");
+          if (descriptionInfo==null || descriptionInfo=="Type description here") descriptionInfo="";
+          var infowindow = new google.maps.InfoWindow({
+              content: '<b>' + markerName + '</b><br/><i>Lat/Long Coords:' + newMarker.getPosition() + '</i><br/>' + descriptionInfo
+          });
+          
+      var path = supplylines.getPath();
+      path.push(event.latLng);
+     
+      google.maps.event.addListener(newMarker, 'click', function() {
+          infowindow.open(map,newMarker);
+      });
       }
+   new google.maps.LatLng = google.maps.Projection.fromPointToLatLng("POINT(-7910337.7674084 5214822.776215)");
+
+    
+  }
+
+
     </script>
   </head>
   <body onload="initialize()">
@@ -29,18 +78,22 @@ Heylo thur
   </body>
 </html>
 
- <?php $data =
-    '{ "supplychain":{ "other_perms":"1", "attributes":{"title": "Oh the places I go"},
-        "stops":[
-        {"local_stop_id":1,"id":1,"geometry":"POINT(-7935103.9952378 5204364.065495)","attributes":{"title":"My Home", "address":"135 Benvenue Street, Wellesey, MA"}},
-        {"local_stop_id":2,"id":2,"geometry":"POINT(-7915169.3461045 5215821.7977)","attributes":{"title":"Work", "address":"614 Mass Ave, Cambridge, MA"}},
-        {"local_stop_id":3,"id":3,"geometry":"POINT(-8091815.4889513 5123790.5438003)","attributes":{"title":"PKA EA", "address":"94 Vernon Street, Hartford, CT"}}
-            ],
-                "hops":[
-                {"from_stop_id":1,"to_stop_id":2,"geometry":"MULTILINESTRING((7935103.9952378 5204364.065495, -7915169.3461045 5215821.7977))","attributes":{"title":"Co
-                {"from_stop_id":1,"to_stop_id":3,"geometry":"MULTILINESTRING((7935103.9952378 5204364.065495, -8091815.4889513 5123790.5438003))","attributes":{"title":
-            ] }
-    }';?>
+ <?php
+    $data = 
+    '{ "supplychain":{ "attributes":{"title": "API Test"}, 
+           "stops":[
+               {"local_stop_id":1,"id":1,"geometry":"POINT(-7910337.7674084 5214822.776215)","attributes":{"title":"Facility #1", "address":"Boston, MA, USA"}},
+               {"local_stop_id":2,"id":2,"geometry":"POINT(-8238307.2400059 4970299.6279391)","attributes":{"title":"Facility #2", "address":"New York, NY, USA"}}
+           ],
+           "hops":[
+               {"from_stop_id":2,"to_stop_id":1,"geometry":"MULTILINESTRING((-8238307.2400059 4970299.6279391,-7910337.7674084 5214822.776215))","attributes":{"title":"Facility #2 to Facility #1"}}
+           ] }
+    }';
+
+print_r(json_decode($data));
+
+?>
+
 
 "gomaps.html" 43L, 1926C               
 
