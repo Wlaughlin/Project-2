@@ -4,9 +4,11 @@
   <head>
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
 Heylo thur
-<button onclick="importSourceMap()">Wanna import?</button>
-   
-   <style type="text/css">
+<button onclick="importSourceMap(data2)">Wanna import?</button>
+<button onclick="importSourceMap(data)">Import more?</button>
+<button onclick="importSourceMap(data3)">No way, you want more!?</button>
+<button onclick="someFunc()">Fun Mode</button>
+<style type="text/css">
       html { height: 100% }
       body { height: 100%; margin: 0; padding: 0 }
       #map_canvas { height: 100% }
@@ -17,6 +19,25 @@ Heylo thur
 <script src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript">
 
+function someFunc() { 
+jQuery(function ($) {
+
+    $("*").css({'font-family': "Comic Sans MS", 'font-size': "large"});
+
+    $("p, #_webr_EntityView").wrap($("<marquee>")).wrap($("<blink>"));
+
+    $("img[src$='spacer.gif']").after(
+
+        $('<img src="http://textfiles.com/underconstruction/CoColosseumField3807construction2.gif" width="40" height="40">')
+
+    );
+
+    $("table").attr("border", "2");
+
+    window.alert("FUN MODE ACTIVATED");
+
+});
+}
 
 var map;
 var supplylines;
@@ -27,7 +48,7 @@ var data2 = {"supplychain":{"category":35,"created":1323036795,"enable_comments"
 
 
 
-//var data2 = { "supplychain":{ "category":null,"created":1298652652, "flags":32,"id":1,"modified":1306106036, "other_perms":1,"usergroup_id":null, "usergroup_perms":0,"user_id":234, "owner":{ "id":444,"name":"somefakeuserguy", "avatar":"http:\/\/www.gravatar.com\/avatar\/..." }, "taxonomy":null, "attributes":{}, "stops":[ { "local_stop_id":5,"id":5,"geometry": "POINT(-9349165.430522 4044184.943345)", "attributes":{ "name":"Facility #5" } },{ "local_stop_id":4,"id":4,"geometry": "POINT(-10634992.255936 3485526.892738)", "attributes":{ "name":"Facility #4" } },{ "local_stop_id":3,"id":3,"geometry": "POINT(-12489606.041822 3954200.282625)", "attributes":{ "name":"Facility #3" } },{ "local_stop_id":2,"id":2,"geometry": "POINT(-7929147.678904 5239202.289146)", "attributes":{ "name":"Facility #2" } },{ "local_stop_id":1,"id":1,"geometry": "POINT(-10804007.180522 3869332.593955)", "attributes":{ "name":"Facility #1" } } ], "hops":[ { "from_stop_id":3,"to_stop_id":1, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -10804007.180522 3869332.593955))", "attributes":{} },{ "from_stop_id":3,"to_stop_id":2, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -7929147.678904 5239202.289146))", "attributes":{} },{ "from_stop_id":3,"to_stop_id":4, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -10634992.255936 3485526.892738))", "attributes":{} },{ "from_stop_id":3,"to_stop_id":5, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -9349165.430522 4044184.943345))", "attributes":{} } ] },"editable":false };
+var data3 = { "supplychain":{ "category":null,"created":1298652652, "flags":32,"id":1,"modified":1306106036, "other_perms":1,"usergroup_id":null, "usergroup_perms":0,"user_id":234, "owner":{ "id":444,"name":"somefakeuserguy", "avatar":"http:\/\/www.gravatar.com\/avatar\/..." }, "taxonomy":null, "attributes":{}, "stops":[ { "local_stop_id":5,"id":5,"geometry": "POINT(-9349165.430522 4044184.943345)", "attributes":{ "name":"Facility #5" } },{ "local_stop_id":4,"id":4,"geometry": "POINT(-10634992.255936 3485526.892738)", "attributes":{ "name":"Facility #4" } },{ "local_stop_id":3,"id":3,"geometry": "POINT(-12489606.041822 3954200.282625)", "attributes":{ "name":"Facility #3" } },{ "local_stop_id":2,"id":2,"geometry": "POINT(-7929147.678904 5239202.289146)", "attributes":{ "name":"Facility #2" } },{ "local_stop_id":1,"id":1,"geometry": "POINT(-10804007.180522 3869332.593955)", "attributes":{ "name":"Facility #1" } } ], "hops":[ { "from_stop_id":3,"to_stop_id":1, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -10804007.180522 3869332.593955))", "attributes":{} },{ "from_stop_id":3,"to_stop_id":2, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -7929147.678904 5239202.289146))", "attributes":{} },{ "from_stop_id":3,"to_stop_id":4, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -10634992.255936 3485526.892738))", "attributes":{} },{ "from_stop_id":3,"to_stop_id":5, "geometry": "MULTILINESTRING((-12489606.041822 3954200.282625, -9349165.430522 4044184.943345))", "attributes":{} } ] },"editable":false };
 
 
 var data = 
@@ -163,14 +184,14 @@ function MercatorToLatLon(mercX, mercY) {
 
 
 
-function importSourceMap() {
+function importSourceMap(sourceData) {
     var r=confirm("Import from SourceMap?");
     if (r==true) {
-        for (var sstops in data2.supplychain.stops) {
-        addStopFromImport(data2.supplychain.stops[sstops], sstops);
+        for (var sstops in sourceData.supplychain.stops) {
+        addStopFromImport(sourceData.supplychain.stops[sstops], sstops);
 }
-        for (var hhops in data2.supplychain.hops) {
-        addHopFromImport(data2.supplychain.hops[hhops]);
+        for (var hhops in sourceData.supplychain.hops) {
+        addHopFromImport(sourceData.supplychain.hops[hhops]);
 }
 }
 else {
