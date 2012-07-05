@@ -1,6 +1,7 @@
 
 <html>
-    <head>
+<!--Html comments are dumb -->
+<head>
         <title>project2</title>
         <link rel="stylesheet" type="text/css" href="proj2.css">
         
