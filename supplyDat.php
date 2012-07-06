@@ -1,7 +1,7 @@
 <html>
 	<head>
 		<title>supplyChainDat</title>
-		<link rel="stylesheet" type="text/css" href="supplyDat.css"
+		<link rel="stylesheet" type="text/css" href="supplyDat.css">
 		<script type="text/javascript">Object.parameter = <?= $parameter ?></script>
 	</head>
 	<body>
@@ -11,7 +11,6 @@
 		<?php
 		$session = curl_init("http://sourcemap.com/services/supplychains/744");
 		$xml = curl_exec($session);
-		$myjsondata = file_get_contents($xml);
 		echo $xml;
 		curl_close($session);
 		?>
