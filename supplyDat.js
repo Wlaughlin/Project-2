@@ -1,5 +1,4 @@
 function fetchSupplyDat(){
-	
- 
-	document.getElementById('dat').innerHTML=datSup;
+    datAtt = dat.supplychain.id;
+    document.getElementById('dat').innerHTML=datAtt;
 }
