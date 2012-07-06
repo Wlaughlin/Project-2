@@ -16,9 +16,9 @@ xmlhttp.onreadystatechange=function()
     document.getElementById("myDiv").innerHTML=xmlhttp.responseText;
     var myJSON = xmlhttp.responseText;
     var myObject = eval('(' + myJSON + ')');
-    document.getElementById("otherDiv").innerHTML = myObject.supplychain.stops[0].attributes.co2e;
+    document.getElementById("otherDiv").innerHTML = "Supply chain " + myObject.supplychain.id + ", titled <b>" + myObject.supplychain.attributes.title + "</b>, has " + myObject.supplychain.stops.length + " stops and " + myObject.supplychain.hops.length + " hops.<br/> It has the following description: " + myObject.supplychain.attributes.description + "<br/>This supply chain was created by the infamous " + myObject.supplychain.owner.name + " (pictured below).<br/><img src='" + myObject.supplychain.owner.avatar + "' height='100' width='100' />";
     }
-  }
+  };
 xmlhttp.open("GET", scURL ,true);
 xmlhttp.send();
 }
