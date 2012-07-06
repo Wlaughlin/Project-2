@@ -2,7 +2,8 @@
     <head>
         <title>supplyChainDat</title>
         <link rel="stylesheet" type="text/css" href="supplyDat.css">
-        <script type="text/javascript"src="supplyDat.js"></script>  
+        <script type="text/javascript"src="supplyDat.js"></script>
+        <script type="text/javascript"src="http://d3js.org/d3.v2.js"></script>
     </head>
     <body>
         <?php
