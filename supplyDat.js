@@ -4,7 +4,7 @@ function fetchSupplyDat(){
     document.getElementById('dat').innerHTML=datAtt;
    
     var width = 960,
-        height = 2000;
+        height = 200;
 
     var tree = d3.layout.tree()
         .size([height, width - 160]);
@@ -18,13 +18,16 @@ function fetchSupplyDat(){
       .append("g")
         .attr("transform", "translate(40, 0)");
 
-    //console.log(dat);
-    var nodes = tree.nodes(dat);
+    //console.log(dat)
+    var nodes = tree.nodes(dat.supplychain);
     var link = vis.selectAll("path.link")
         .data(tree.links(nodes))
       .enter().append("path")
         .attr("class", "link")
         .attr("d", diagonal);
+
+    console.log(nodes);
+    console.log(link)
 
     var node = vis.selectAll("g.node")
         .data(nodes)
