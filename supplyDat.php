@@ -21,7 +21,7 @@
         </form>
 
         <button onclick="fetchSupplyDat()">after submitting, click to display data</button>
-        
         <p id="dat"></p>
+        <div id="chart">hi</div>
     </body>
 </html>
