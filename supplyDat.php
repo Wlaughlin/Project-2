@@ -10,10 +10,10 @@
         $num = $_POST["schain"];
         $session = curl_init("http://sourcemap.com/services/supplychains/" . $num);
         curl_setopt($session, CURLOPT_RETURNTRANSFER, TRUE);
-        $xml = curl_exec($session);
+        $sDat = curl_exec($session);
         curl_close($session);
         ?>
-        <script type="text/javascript">dat = <?= $xml ?></script>
+        <script type="text/javascript">dat = <?= $sDat ?></script>
         
         <form method="post" action="<?php echo $PHP_SELF;?>" onchange="fetchSupplyDat();">
         Enter supplychain number: <input type="text" name="schain" /><br />
