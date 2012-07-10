@@ -1,3 +1,17 @@
+function enter_pressed(e){
+    var keyCode;
+    if(window.event){
+        keyCode = window.event.keyCode
+    }
+    else if(e){
+        keyCode = e.which;
+    }
+    else{
+        return false;
+    }
+    return(keyCode == 13);
+}
+
 function ajaxRequest(){
     
     //create xmlHttpReq object
@@ -19,14 +33,12 @@ function ajaxRequest(){
     //get form input value
     var numS = encodeURIComponent(document.getElementById("num").value);
 
-    //send to value  php
+    //send input value to php
     xmlhttp.open("POST","jsonLoad.php?num=" +numS,true);
     xmlhttp.send(null);
 }
 
-function supVis(dat){
-    
-    //visualize data
+function supVis(dat){ //visualize data
     datAtt = dat.supplychain.id;
     document.getElementById('dat').innerHTML=datAtt;
 }
