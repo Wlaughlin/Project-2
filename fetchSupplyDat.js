@@ -7,9 +7,7 @@ function ajaxRequest(){
     //recieve data sent from sever
     xmlhttp.onreadystatechange=function(){
         if(xmlhttp.readyState == 4){
-            var dat = JSON.parse(xmlhttp.responseText);
-            datAtt = dat.supplychain.id;
-            document.getElementById('dat').innerHTML=datAtt;
+            supVis(JSON.parse(xmlhttp.responseText));
         }   
     }
 
@@ -17,4 +15,9 @@ function ajaxRequest(){
 
     xmlhttp.open("POST","jsonLoad.php?num=" +numS,true);
     xmlhttp.send(null);
+}
+
+function supVis(dat){
+    datAtt = dat.supplychain.id;
+    document.getElementById('dat').innerHTML=datAtt;
 }
