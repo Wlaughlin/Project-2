@@ -41,4 +41,11 @@ function ajaxRequest(){
 function supVis(dat){ //visualize data
     datAtt = dat.supplychain.id;
     document.getElementById('dat').innerHTML=datAtt;
+
+    var layout = d3.layout.tree().size([300, 300]);
+    var nodes = layout.nodes(dat);
+    var links = layout.links(nodes);
+
+    console.log(nodes); 
+    console.log(links);
 }
