@@ -39,13 +39,16 @@ function ajaxRequest(){
 }
 
 function supVis(dat){ //visualize data
-    datAtt = dat.supplychain.id;
-    document.getElementById('dat').innerHTML=datAtt;
-
-    var layout = d3.layout.tree().size([300, 300]);
-    var nodes = layout.nodes(dat);
-    var links = layout.links(nodes);
-
-    console.log(nodes); 
-    console.log(links);
+    //d3 testing    
+    var dataset = [5,15,25];
+    
+    d3.select("#dOut").selectAll("div")
+        .data(dataset)
+        .enter()
+        .append("div")
+        .attr("class", "bar")
+        .style("height", function(d){
+            var barHeight = d * 5; //scale up by fact of 5
+            return barHeight + "px";
+        });
 }

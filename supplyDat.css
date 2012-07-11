@@ -4,6 +4,7 @@
 #title{
     font-family: 'Fascinate', cursive;
 }
+
 body{
     background-color: transparent;
 }
@@ -15,7 +16,6 @@ body{
     padding: 15px;
     color: white;
     font-size: 10pt;
-    text-color: white;
     background-color: black;
     border-radius: 1.6em;
     box-shadow: 2px 2px 2px #92E0B3;
@@ -25,8 +25,7 @@ body{
     position:absolute;
     top: 30px;
     left:280px;
-    font-family: 'Oleo Script', cursive;
-    font-size: 15pt;
+    font-size: 12pt;
     text-decoration: none;
     padding: 7px;
     color: white;
@@ -35,24 +34,16 @@ body{
     box-shadow: 2px 2px 2px #92E0B3;
 }
 
-#dat{
-    position:absolute;
-    top:100;
-    left:200;
+div.bar{
+    display: inline-block;
+    width: 20px;
+    height: 75px;
+    margin-right: 2px;
+    background-color: teal;
 }
 
-.node circle{
-    fill: #fff;
-    stroke: blue;
-    stroke-width: 1.5px;
-}
- 
-.node{
-    font: 10px sans-serif;
-}
-
-.link{
-    fill: none;
-    stroke: #ccc;
-    stroke-width: 1.5px;
+#dOut{
+    position: absolute;
+    top: 100;
+    left:500;
 }

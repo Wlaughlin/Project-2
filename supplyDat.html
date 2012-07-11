@@ -5,13 +5,15 @@
         <script type="text/javascript"src="fetchSupplyDat.js"></script>
         <script type="text/javascript"src="http://d3js.org/d3.v2.js"></script>
     </head>
-    <body>     
-        <form method="get" name='numSelect' onSubmit="return false;" onKeyPress="if(enter_pressed(event)){ajaxRequest()}">
+    <body>
+        <h1 id='title'>Supply Chain</h1>
+        <form method="get" id='numSelect' onSubmit="return false;" onKeyPress="if(enter_pressed(event)){ajaxRequest()}">
         Enter supplychain number: <input type="text" id='num'/><br />
-        <input type="button" value="submit" onClick="ajaxRequest()"/>
+        <a id='snd' href="#" onclick="ajaxRequest()">submit</a>
         </form>
 
         <p id="dat"></p>
-        <div id="chart"></div>
+        <p id="dOut"></p>
+        <div id="chart"></p>
     </body>
 </html>
