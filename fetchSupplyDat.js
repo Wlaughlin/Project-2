@@ -39,32 +39,39 @@ function ajaxRequest(){
 }
 
 function supVis(dat){ //visualize data
-   var width = 960,
-    height = 500;
+    var width = 760,
+        height = 500;
 
-var color = d3.scale.category20();
+    var color = d3.scale.category20();
 
-var force = d3.layout.force()
-    .charge(-120)
-    .linkDistance(30)
-    .size([width, height]);
+    var force = d3.layout.force()
+        .charge(-120)
+        .linkDistance(30)
+        .size([width, height]);
 
-var svg = d3.select("#chart").insert("svg", ":first-child")
-   .attr("width", width)
-   .attr("height", height);
+    var svg = d3.select("#chart").insert("svg", ":first-child")
+        .attr("width", width)
+        .attr("height", height);
 
-d3.select("#chart").insert("div", ":first-child")
-    .attr("id", "title") 
-    .html("<br/><br/><br/><br/><hr/>" + dat.supplychain.attributes.title);
+    d3.select("#chart").insert("div", ":first-child")
+        .attr("id", "title") 
+        .html("<br/><br/><br/><br/><hr/>" + dat.supplychain.attributes.title);
+    
+    d3.select("img").remove()
+    
+    d3.select("#frme").insert("img", ":first-child")
+        .attr("src","http://www.sourcemap.com/static/" + dat.supplychain.id +'.f.png')
+        .attr("width", "552px")
+        .attr("height", "300px")
 
-json=dat;
-data = {};
-                  data.nodes = [];
-                  data.links = [];
+    json=dat;
+    data = {};
+    data.nodes = [];
+    data.links = [];
   
-                  var stopmax = 1;
-                  var hopmax = 1;
-                  var fill=d3.scale.category20();
+    var stopmax = 1;
+    var hopmax = 1;
+    var fill=d3.scale.category20();
 
                   if(typeof(json.supplychain.stops) != 'undefined') {
                       for(var i=0; i<json.supplychain.stops.length; ++i) {

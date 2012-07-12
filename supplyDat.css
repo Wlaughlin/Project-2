@@ -5,7 +5,11 @@
     font-family: 'Fascinate', cursive;
     margin-left: 20px;
 }
-
+#frme{
+    position: absolute;
+    top:170px;
+    right: 20px;
+}
 body{
     background-color: transparent;
 }
@@ -55,8 +59,8 @@ div.bar{
 }
 
 hr{
-    border: 1px solid white;
-    color: transparent;
+    border: 3px solid black;
+    border-radius: 1.6em;
     box-shadow: 2px 2px 2px #92E0B3;
 }
 
