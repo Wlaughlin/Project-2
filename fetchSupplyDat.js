@@ -54,8 +54,8 @@ var svg = d3.select("#chart").insert("svg", ":first-child")
    .attr("height", height);
 
 d3.select("#chart").insert("div", ":first-child")
-    .style("id", "title") 
-    .html("<br/><br/><br/>" + dat.supplychain.attributes.title);
+    .attr("id", "title") 
+    .html("<br/><br/><br/><br/><hr/>" + dat.supplychain.attributes.title);
 
 json=dat;
 data = {};

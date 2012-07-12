@@ -3,6 +3,7 @@
 
 #title{
     font-family: 'Fascinate', cursive;
+    margin-left: 20px;
 }
 
 body{
@@ -51,6 +52,12 @@ div.bar{
     position: absolute;
     top: 100;
     left:500;
+}
+
+hr{
+    border: 1px solid white;
+    color: transparent;
+    box-shadow: 2px 2px 2px #92E0B3;
 }
 
 circle.node {
