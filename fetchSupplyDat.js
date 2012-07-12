@@ -59,6 +59,9 @@ function supVis(dat){ //visualize data
         .append("img")
         .attr("src","http://www.sourcemap.com/static/" + dat.supplychain.id +'.f.png')
         .style("float", "right")
+        .style("border", "0px solid transparent")
+        .style("border-radius", "0.2em")
+        .style("box-shadow", "0px 0px 2px #92E0B3")
         .attr("width", "552px")
         .attr("height", "300px");
 
