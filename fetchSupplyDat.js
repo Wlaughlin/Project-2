@@ -49,12 +49,14 @@ var force = d3.layout.force()
     .linkDistance(30)
     .size([width, height]);
 
-console.log(dat);
-var text = document.getElementById("chart");
-text.innerHTML+="<br/><br/><br/><div id='title'>" + dat.supplychain.attributes.title + "</div><hr><br/>";
-var svg = d3.select("#chart").append("svg")
+var svg = d3.select("#chart").insert("svg", ":first-child")
    .attr("width", width)
    .attr("height", height);
+
+d3.select("#chart").insert("div", ":first-child")
+    .style("id", "title") 
+    .html("<br/><br/><br/>" + dat.supplychain.attributes.title);
+
 json=dat;
 data = {};
                   data.nodes = [];
