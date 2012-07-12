@@ -49,13 +49,13 @@ var force = d3.layout.force()
     .linkDistance(30)
     .size([width, height]);
 
+console.log(dat);
+var text = document.getElementById("chart");
+text.innerHTML+="<br/><br/><br/><div id='title'>" + dat.supplychain.attributes.title + "</div><hr><br/>";
 var svg = d3.select("#chart").append("svg")
-    .attr("width", width)
-    .attr("height", height);
+   .attr("width", width)
+   .attr("height", height);
 json=dat;
-
-
-
 data = {};
                   data.nodes = [];
                   data.links = [];
@@ -147,7 +147,9 @@ data = {};
 
     node.attr("cx", function(d) { return d.x; })
         .attr("cy", function(d) { return d.y; });
+
   });
+
     /*d3 testing    
     var dataset = [5,15,25];
     
