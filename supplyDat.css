@@ -34,6 +34,11 @@ body{
     box-shadow: 2px 2px 2px #92E0B3;
 }
 
+#el{
+    position:absolute;
+    top:200;
+}
+
 div.bar{
     display: inline-block;
     width: 20px;
@@ -46,4 +51,14 @@ div.bar{
     position: absolute;
     top: 100;
     left:500;
+}
+
+circle.node {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
+line.link {
+  stroke: #999;
+  stroke-opacity: .6;
 }
