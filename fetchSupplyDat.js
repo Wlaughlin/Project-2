@@ -55,14 +55,12 @@ function supVis(dat){ //visualize data
 
     d3.select("#chart").insert("div", ":first-child")
         .attr("id", "title") 
-        .html("<br/><br/><br/><br/><hr/>" + dat.supplychain.attributes.title);
-    
-    d3.select("img").remove()
-    
-    d3.select("#frme").insert("img", ":first-child")
+        .html("<br/><br/><br/><br/><hr/>" + dat.supplychain.attributes.title)
+        .append("img")
         .attr("src","http://www.sourcemap.com/static/" + dat.supplychain.id +'.f.png')
+        .style("float", "right")
         .attr("width", "552px")
-        .attr("height", "300px")
+        .attr("height", "300px");
 
     json=dat;
     data = {};
