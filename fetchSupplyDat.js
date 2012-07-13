@@ -69,7 +69,7 @@ function supVis(dat){ //visualize data
         .style("border-radius", "0.2em")
         .style("box-shadow", "0px 0px 2px #92E0B3")
         .attr("width", "552px")
-        .attr("height", "200px");
+        .attr("height", "300px");
 
 
     json=dat;
