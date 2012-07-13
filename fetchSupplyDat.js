@@ -91,7 +91,7 @@ function supVis(dat){ //visualize data
                           }
                               var newNode = {
                                   "name": json.supplychain.stops[i].attributes.title, 
-                                  "group":json.supplychain.stops[i].local_stop_id-1,
+                                  "group":json.supplychain.stops[i].geometry.slice('6','9'),
                                   "size":size                 
                               }
                               data.nodes[json.supplychain.stops[i].local_stop_id-1] = newNode;
@@ -106,18 +106,18 @@ function supVis(dat){ //visualize data
                               }
                           }     
                       }
-      
+                        
+                        console.log(json);
                       for (var i=0; i<json.supplychain.hops.length; ++i) {
-                          var size = 4;
-                          if(typeof(json.supplychain.hops[i].attributes.co2e) != 'undefined') {
-                              size  = Math.max(4, 8 * json.supplychain.hops[i].attributes.co2e / hopmax);
+                          var size = 1;
+                          if(typeof(json.supplychain.hops[i].attributes.distance) != 'undefined') {
+                              size  = json.supplychain.hops[i].attributes.distance;
                           }
-          
+                        
                           var newLink = {
                                             "source": json.supplychain.hops[i].from_stop_id-1, 
                                             "target": json.supplychain.hops[i].to_stop_id-1,
-                                            "value": 1,
-                                            "size": size
+                                            "value": size
                                         };
                           data.links.push(newLink);
                       }
@@ -136,7 +136,8 @@ function supVis(dat){ //visualize data
       .data(data.links)
     .enter().append("line")
       .attr("class", "link")
-      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+      .style("stroke-width", function(d) {return Math.sqrt(d.value/1000); });
+      console.log(link); 
 
   var node = svg.selectAll("circle.node")
       .data(data.nodes)
