@@ -5,13 +5,12 @@
     font-family: 'Fascinate', cursive;
     margin-left: 20px;
 }
-#frme{
-    position: absolute;
-    top:170px;
-    right: 20px;
-}
 body{
     background-color: transparent;
+}
+
+svg{
+    float: left;
 }
 
 

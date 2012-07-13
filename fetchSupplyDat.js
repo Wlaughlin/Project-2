@@ -49,6 +49,12 @@ function supVis(dat){ //visualize data
         .linkDistance(30)
         .size([width, height]);
 
+    d3.select("#chart").insert("div", ":first-child")
+        .html('<p>' + dat.supplychain.attributes.description + '</p>')
+        .style("float","right")
+        .attr("width", "552px")
+        .attr("height","250px");
+
     var svg = d3.select("#chart").insert("svg", ":first-child")
         .attr("width", width)
         .attr("height", height);
@@ -63,7 +69,8 @@ function supVis(dat){ //visualize data
         .style("border-radius", "0.2em")
         .style("box-shadow", "0px 0px 2px #92E0B3")
         .attr("width", "552px")
-        .attr("height", "300px");
+        .attr("height", "200px");
+
 
     json=dat;
     data = {};
