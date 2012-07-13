@@ -9,11 +9,6 @@ body{
     background-color: transparent;
 }
 
-svg{
-    float: left;
-}
-
-
 #numSelect{
     position:absolute;
     left: 20px;
