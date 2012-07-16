@@ -1,15 +1,12 @@
 @import url(http://fonts.googleapis.com/css?family=Fascinate);
 @import url(http://fonts.googleapis.com/css?family=Oleo+Script);
 
-#title{
+#title{ /*page header*/
     font-family: 'Fascinate', cursive;
     margin-left: 20px;
 }
-body{
-    background-color: transparent;
-}
 
-#numSelect{
+#numSelect{ /*form*/
     position:absolute;
     left: 20px;
     padding: 15px;
@@ -20,7 +17,7 @@ body{
     box-shadow: 2px 2px 2px #92E0B3;
 }
 
-#snd{
+#snd{ /*submit button*/
     position:absolute;
     top: 30px;
     left:280px;
@@ -33,37 +30,8 @@ body{
     box-shadow: 2px 2px 2px #92E0B3;
 }
 
-#el{
+#visOut{
     position:absolute;
-    top:200;
-}
-
-div.bar{
-    display: inline-block;
-    width: 20px;
-    height: 75px;
-    margin-right: 2px;
-    background-color: teal;
-}
-
-#dOut{
-    position: absolute;
-    top: 100;
-    left:500;
-}
-
-hr{
-    border: 3px solid black;
-    border-radius: 1.6em;
-    box-shadow: 2px 2px 2px #92E0B3;
-}
-
-circle.node {
-  stroke: #fff;
-  stroke-width: 1.5px;
-}
-
-line.link {
-  stroke: #999;
-  stroke-opacity: .6;
+    top: 100px;
+    left: 480px;
 }
