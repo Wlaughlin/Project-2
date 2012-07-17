@@ -40,12 +40,20 @@ function ajaxRequest(){
 }
 
 function supVis(dat){ //visuailize data
-    var stops;
-    if(typeof(dat.supplychain.stops) != 'undefined'){
-        for(var i = 0; i<dat.supplychain.stops.length; ++i){
-            stops += dat.supplychain.stops[i].id.toString() + ' ';
+
+    var links = []; //list of hop objects(source and target)
+    var h = dat.supplychain.hops;
+    var s = dat.supplychain.stops;
+
+    if(typeof(h) != 'undefined'){
+        for(var i = 0; i<h.length; ++i){
+            from = h[i].from_stop_id; //source
+            to = h[i].to_stop_id; //target
+            //stop ids are in descending order
+            //thus correct stop = num of stops - stop id
+            links.push( '{' + "source: " + s[s.length-from].attributes.title + ', ' + "target: " + s[s.length-to].attributes.title + '}');
         }
     }
     var out = d3.select("#visOut")
-        .text(stops);
+        .text(links);
 }
