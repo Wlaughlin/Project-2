@@ -1,7 +1,8 @@
 function enter_pressed(e){ //check if user hits "enter"
+    
     var keyCode;
     if(window.event){
-        keyCode = window.event.keyCode
+        keyCode = window.event.keyCode;
     }
     else if(e){
         keyCode = e.which;
@@ -38,15 +39,13 @@ function ajaxRequest(){
     xmlhttp.send(null);
 }
 
-function supVis(dat){ //visualize data
-    
-    //width and height
-    var w = 500,
-        h = 100;
-
-    //create svg element
-    var svg = d3.select("#visOut")
-        .append("svg")
-        .attr("width", w)
-        .attr("height", h);
+function supVis(dat){ //visuailize data
+    var stops;
+    if(typeof(dat.supplychain.stops) != 'undefined'){
+        for(var i = 0; i<dat.supplychain.stops.length; ++i){
+            stops += dat.supplychain.stops[i].id.toString() + ' ';
+        }
+    }
+    var out = d3.select("#visOut")
+        .text(stops);
 }
