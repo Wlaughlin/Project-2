@@ -71,17 +71,19 @@ function supVis(dat){ //visuailize data
         .attr("width", w)
         .attr("height", h);
 
-    svg.selectAll("circle")
+    svg.selectAll("circle") //circle for each node
         .data(nodes)
         .enter()
         .append("circle")
-        .attr("cx", function(d, i){
-            return i*20;
+        .attr("cx", function(){
+            return Math.random() * w;
         })
-        .attr("cy", 50)
+        .attr("cy", function(){
+            return Math.random() * h;
+        })
         .attr("r", 5);
 
-    svg.selectAll("text")
+    svg.selectAll("text") //text for each node
         .data(nodes)
         .enter()
         .append("text")
@@ -91,6 +93,6 @@ function supVis(dat){ //visuailize data
         .attr("x", function(d, i){
             return i*20;
         })
-        .attr("y", 30); 
+        .attr("y", 30);
 
 }
