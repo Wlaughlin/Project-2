@@ -51,9 +51,9 @@ function supVis(dat){ //visuailize data
             to = h[i].to_stop_id; //target
             //stop ids are in descending order
             //thus correct stop = num of stops - stop id
-            links.push( '{' + "source: " + s[s.length-from].attributes.title + ', ' + "target: " + s[s.length-to].attributes.title + '}');
+            links.push({"source" : s[s.length-from].attributes.title, "target" : s[s.length-to].attributes.title});
         }
     }
     var out = d3.select("#visOut")
-        .text(links);
+        .text(links[0].source);
 }
