@@ -62,13 +62,12 @@ function supVis(dat){ //visuailize data
         }
     }
 
-    console.log(nodes);
-
     var w = 500, //set width and height
         h = 100;
 
     var svg = d3.select("#visOut") //add svg element
         .append("svg")
+        .attr("id", "svgOut")
         .attr("width", w)
         .attr("height", h);
 
@@ -81,4 +80,17 @@ function supVis(dat){ //visuailize data
         })
         .attr("cy", 50)
         .attr("r", 5);
+
+    svg.selectAll("text")
+        .data(nodes)
+        .enter()
+        .append("text")
+        .text(function(d){
+            return d.name;
+        })
+        .attr("x", function(d, i){
+            return i*20;
+        })
+        .attr("y", 30); 
+
 }
