@@ -47,7 +47,7 @@ function supVis(dat){ //visuailize data
     var s = dat.supplychain.stops;
 
     if(typeof(h) != 'undefined'){
-        for(var i = 0; i<h.length; ++i){
+        for(var i = 0; i<h.length; ++i){ //get links
             from = h[i].from_stop_id; //source
             to = h[i].to_stop_id; //target
             //stop ids are in descending order
@@ -57,12 +57,28 @@ function supVis(dat){ //visuailize data
     }
 
    if(typeof(s) != 'undefined'){
-        for(var i = 0; i<s.length; ++i){
+        for(var i = 0; i<s.length; ++i){ //get nodes
             nodes.push({"name" : s[i].attributes.title});
         }
     }
 
-    console.log(links);
-    var out = d3.select("#visOut")
-        .text(links[0].source);
+    console.log(nodes);
+
+    var w = 500, //set width and height
+        h = 100;
+
+    var svg = d3.select("#visOut") //add svg element
+        .append("svg")
+        .attr("width", w)
+        .attr("height", h);
+
+    svg.selectAll("circle")
+        .data(nodes)
+        .enter()
+        .append("circle")
+        .attr("cx", function(d, i){
+            return i*20;
+        })
+        .attr("cy", 50)
+        .attr("r", 5);
 }
