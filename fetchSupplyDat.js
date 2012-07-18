@@ -65,6 +65,9 @@ function supVis(dat){ //visuailize data
     var w = 500, //set width and height
         h = 100;
 
+    var sLoc = [];
+    var s2Loc = [];
+
     var svg = d3.select("#visOut") //add svg element
         .append("svg")
         .attr("id", "svgOut")
@@ -76,10 +79,14 @@ function supVis(dat){ //visuailize data
         .enter()
         .append("circle")
         .attr("cx", function(){
-            return Math.random() * w;
+            xLoc = Math.random() * w;
+            sLoc.push(xLoc);
+            return xLoc;
         })
         .attr("cy", function(){
-            return Math.random() * h;
+            yLoc = Math.random() * h;
+            s2Loc.push(yLoc);
+            return yLoc;
         })
         .attr("r", 5);
 
@@ -91,8 +98,9 @@ function supVis(dat){ //visuailize data
             return d.name;
         })
         .attr("x", function(d, i){
-            return i*20;
+            return sLoc[i]
         })
-        .attr("y", 30);
-
+        .attr("y", function(d, i){
+            return s2Loc[i] - 20
+        });
 }
