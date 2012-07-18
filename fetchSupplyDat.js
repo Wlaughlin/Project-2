@@ -46,28 +46,32 @@ function supVis(dat){ //visuailize data
     var h = dat.supplychain.hops;
     var s = dat.supplychain.stops;
 
+    var s3Loc = [];
+    for (var j = 0; j<s.length+1; j++) {
+        s3Loc[j] = undefined;
+    }
+    
     if(typeof(h) != 'undefined'){
         for(var i = 0; i<h.length; ++i){ //get links
-            from = h[i].from_stop_id; //source
-            to = h[i].to_stop_id; //target
+            //from = h[i].from_stop_id; //source
+            //to = h[i].to_stop_id; //target
             //stop ids are in descending order
             //thus correct stop = num of stops - stop id
-            links.push({"source" : s[s.length-from].attributes.title, "target" : s[s.length-to].attributes.title});
+            s3Loc[h[i].from_stop_id] = h[i].to_stop_id;
+            //links.push({"source" : s[s.length-from].attributes.title, "target" : s[s.length-to].attributes.title});
         }
     }
-
    if(typeof(s) != 'undefined'){
         for(var i = 0; i<s.length; ++i){ //get nodes
             nodes.push({"name" : s[i].attributes.title});
         }
     }
 
-    var w = 500, //set width and height
-        h = 100;
+    var w = 750, //set width and height
+        h = 400;
 
     var sLoc = [];
     var s2Loc = [];
-
     var svg = d3.select("#visOut") //add svg element
         .append("svg")
         .attr("id", "svgOut")
@@ -98,9 +102,37 @@ function supVis(dat){ //visuailize data
             return d.name;
         })
         .attr("x", function(d, i){
-            return sLoc[i]
+            return sLoc[i] - 20
         })
         .attr("y", function(d, i){
-            return s2Loc[i] - 20
+            return s2Loc[i] - 10
         });
+
+    var tag = 0;
+    var myLines = svg.selectAll("line")
+        .data(nodes)
+        .enter()
+        .append("line")
+        .attr("x1", function(d, i){
+            return sLoc[sLoc.length - i]
+        })
+        .attr("y1", function(d, i){
+            return s2Loc[sLoc.length - i]
+        })
+        .attr("x2", function(d, i){
+            return sLoc[sLoc.length - s3Loc[i]]
+        })
+        .attr("y2", function(d, i){
+            return s2Loc[sLoc.length - s3Loc[i]]
+        })
+        .attr("visibility", function(d, i){
+            if (s3Loc[i] === undefined) {
+                return "hidden"
+            }
+            else {
+                return "visible"
+            }
+        });
+        console.log(s3Loc);
+
 }
