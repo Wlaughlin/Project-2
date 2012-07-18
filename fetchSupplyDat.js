@@ -42,6 +42,7 @@ function ajaxRequest(){
 function supVis(dat){ //visuailize data
 
     var links = []; //list of hop objects(source and target)
+    var nodes = []; //list of stop objects(name)
     var h = dat.supplychain.hops;
     var s = dat.supplychain.stops;
 
@@ -54,6 +55,14 @@ function supVis(dat){ //visuailize data
             links.push({"source" : s[s.length-from].attributes.title, "target" : s[s.length-to].attributes.title});
         }
     }
+
+   if(typeof(s) != 'undefined'){
+        for(var i = 0; i<s.length; ++i){
+            nodes.push({"name" : s[i].attributes.title});
+        }
+    }
+
+    console.log(links);
     var out = d3.select("#visOut")
         .text(links[0].source);
 }
