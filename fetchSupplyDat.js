@@ -59,7 +59,7 @@ function supVis(dat){ //visuailize data
             nodes.push({"name" : s[i].attributes.title});
         }
     }
-
+    nodes.reverse();
     var w = 800, //set width and height
         h = 400;
     
@@ -134,4 +134,18 @@ function supVis(dat){ //visuailize data
             return s2Loc[d.target-1];
         })
         .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+        .attr("marker-end", "url(#arrow)");
+
+        svg.append("svg:marker")
+        .attr("id", "arrow")
+        .attr("viewBox", "0 0 10 10")
+        .attr("refX", "20")
+        .attr("refY", "5")
+        .attr("markerUnits","strokeWidth")
+        .attr("markerWidth","9")
+        .attr("markerHeight","5")
+        .attr("orient","auto")
+        .append("svg:path")
+        .attr("d","M 0 0 L 10 5 L 0 10 z")
+        .attr("fill", "#92E0B3");
 }
