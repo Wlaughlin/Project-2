@@ -45,38 +45,42 @@ function supVis(dat){ //visuailize data
     var nodes = []; //list of stop objects(name)
     var h = dat.supplychain.hops;
     var s = dat.supplychain.stops;
-
     var pathLength = [];
     var s3Loc = [];
+    var islands = [];
+    if(typeof(s) != 'undefined'){
+        for(var i = 0; i<s.length; ++i){ //get nodes
+            nodes.push({"name" : s[i].attributes.title, "id" : s[i].id});
+        }
+    }
+    nodes.reverse();
     for (var j = 0; j<s.length+1; j++) {
         s3Loc[j] = undefined;
         pathLength[j] = 0;
     }
     if(typeof(h) != 'undefined'){
         for(var i = 0; i<h.length; ++i){ //get links
-            //from = h[i].from_stop_id; //source
-            //to = h[i].to_stop_id; //target
-            //stop ids are in descending order
-            //thus correct stop = num of stops - stop id
-            s3Loc[h[i].from_stop_id] = h[i].to_stop_id;
-            //links.push({"source" : s[s.length-from].attributes.title, "target" : s[s.length-to].attributes.title});
-        }   //          ({"source" : {"name" : s[s.length-from].attributes.title, "index" : n}
-    }
-   if(typeof(s) != 'undefined'){
-        for(var i = 0; i<s.length; ++i){ //get nodes
-            nodes.push({"name" : s[i].attributes.title, "id" : s[i].id});
+             to = h[i].to_stop_id; //target
+             from = h[i].from_stop_id; //source
+             s3Loc[from] = h[i].to_stop_id;
+             islands[to] = 1;
+             links.push({"source" : from, "target" : to});
         }
     }
-    console.log(nodes);
-    nodes.reverse();
+    console.log(links);
     var width = 640, //set width and height
         height = 200 + 3*s.length;
     var pathLengthMax = 1;
+   /* for (var m = 0; m < links.length; m++) {
+        var l = m;
+        while
+            
+*/
+
  for (var k=1; k<s3Loc.length; k++) {
         var l = k;
         while (s3Loc[l] != undefined) {
             pathLength[k]++;
-            console.log(s3Loc[l]);
             l = s3Loc[l];
             if (l< k) {
                 pathLength[k]+= pathLength[l];
@@ -86,8 +90,7 @@ function supVis(dat){ //visuailize data
         if (pathLength[k] > pathLengthMax) pathLengthMax = pathLength[k];
  }
     console.log(pathLength);
-    console.log(pathLengthMax);
-
+    console.log(islands);
 
 
     var sLoc = [];
@@ -120,7 +123,12 @@ function supVis(dat){ //visuailize data
         .enter()
         .append("circle")
         .attr("cx", function(d, i){
-            xLoc = width - ((pathLength[i+1]/pathLengthMax * width) + 20);
+           /* if (islands[i+1] === undefined && pathLength[i+1] == 0) {
+                xLoc = 0;
+            }
+            else {}*/
+            xLoc = width - (pathLength[i+1]/pathLengthMax * width * .8) - 50;
+           // xLoc = Math.random() * width;
             sLoc.push(xLoc);
             return xLoc;
         })
@@ -147,32 +155,30 @@ function supVis(dat){ //visuailize data
 
     var tag = 0;
     var myLines = svg.selectAll("line")
-        .data(nodes)
+        .data(links)
         .enter()
         .append("line")
         .attr("x1", function(d, i){
-            return sLoc[i]
+            return sLoc[d.source-1]
         })
         .attr("y1", function(d, i){
-            return s2Loc[i]
+            return s2Loc[d.source-1]
         })
         .attr("x2", function(d, i){
-            return sLoc[s3Loc[i+1] - 1]
+            return sLoc[d.target-1]
         })
         .attr("y2", function(d, i){
-            return s2Loc[s3Loc[i+1] - 1]
+            return s2Loc[d.target-1]
         })
-        .attr("visibility", function(d, i){
+        /*.attr("visibility", function(d, i){
             if (s3Loc[i+1] === undefined) {
                 return "hidden"
             }
             else {
                 return "visible"
             }
-        })
-        .attr("stroke-width", 5)
+        })*/
         .attr("stroke", "#ff0000")
         .attr("marker-end", "url(#Triangle)");
-        console.log(s3Loc);
 
 }
