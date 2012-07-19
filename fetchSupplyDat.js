@@ -103,8 +103,7 @@ function supVis(dat){ //visuailize data
         .attr("xmlns", "http://www.w3.org/2000/svg")
         .attr('version', '1.1');
    
-    var defs = d3.select('svg').append("defs");
-    var marker = d3.select('defs').append("marker")
+    var defs = d3.selectAll('svg').append("marker")
         .attr('id', 'Triangle')
         .attr('viewBox', '0 0 10 10')
         .attr('refX', '0')
@@ -114,7 +113,7 @@ function supVis(dat){ //visuailize data
         .attr('markerHeight', '5')
         .attr('orient', 'auto')
         .attr('fill', 'green');
-    var path = d3.select("marker").append("path")
+    var path = d3.selectAll("marker").append("path")
         .attr('d', 'M 0 0 L 10 5 L 0 10 z');
 
 
@@ -178,7 +177,6 @@ function supVis(dat){ //visuailize data
                 return "visible"
             }
         })*/
-        .attr("stroke", "#ff0000")
         .attr("marker-end", "url(#Triangle)");
 
 }
