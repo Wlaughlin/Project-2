@@ -46,11 +46,12 @@ function supVis(dat){ //visuailize data
     var h = dat.supplychain.hops;
     var s = dat.supplychain.stops;
 
+    var pathLength = [];
     var s3Loc = [];
     for (var j = 0; j<s.length+1; j++) {
         s3Loc[j] = undefined;
+        pathLength[j] = 0;
     }
-    
     if(typeof(h) != 'undefined'){
         for(var i = 0; i<h.length; ++i){ //get links
             //from = h[i].from_stop_id; //source
@@ -59,36 +60,72 @@ function supVis(dat){ //visuailize data
             //thus correct stop = num of stops - stop id
             s3Loc[h[i].from_stop_id] = h[i].to_stop_id;
             //links.push({"source" : s[s.length-from].attributes.title, "target" : s[s.length-to].attributes.title});
-        }
+        }   //          ({"source" : {"name" : s[s.length-from].attributes.title, "index" : n}
     }
    if(typeof(s) != 'undefined'){
         for(var i = 0; i<s.length; ++i){ //get nodes
-            nodes.push({"name" : s[i].attributes.title});
+            nodes.push({"name" : s[i].attributes.title, "id" : s[i].id});
         }
     }
+    console.log(nodes);
+    nodes.reverse();
+    var width = 640, //set width and height
+        height = 200 + 3*s.length;
+    var pathLengthMax = 1;
+ for (var k=1; k<s3Loc.length; k++) {
+        var l = k;
+        while (s3Loc[l] != undefined) {
+            pathLength[k]++;
+            console.log(s3Loc[l]);
+            l = s3Loc[l];
+            if (l< k) {
+                pathLength[k]+= pathLength[l];
+                break;
+            }
+        }
+        if (pathLength[k] > pathLengthMax) pathLengthMax = pathLength[k];
+ }
+    console.log(pathLength);
+    console.log(pathLengthMax);
 
-    var w = 750, //set width and height
-        h = 400;
+
 
     var sLoc = [];
     var s2Loc = [];
     var svg = d3.select("#visOut") //add svg element
         .append("svg")
         .attr("id", "svgOut")
-        .attr("width", w)
-        .attr("height", h);
+        .attr("width", width)
+        .attr("height", height)
+        .attr("xmlns", "http://www.w3.org/2000/svg")
+        .attr('version', '1.1');
+   
+    var defs = d3.select('svg').append("defs");
+    var marker = d3.select('defs').append("marker")
+        .attr('id', 'Triangle')
+        .attr('viewBox', '0 0 10 10')
+        .attr('refX', '0')
+        .attr('refY', '5')
+        .attr('markerUnits', 'strokeWidth')
+        .attr('markerWidth', '6')
+        .attr('markerHeight', '5')
+        .attr('orient', 'auto')
+        .attr('fill', 'green');
+    var path = d3.select("marker").append("path")
+        .attr('d', 'M 0 0 L 10 5 L 0 10 z');
+
 
     svg.selectAll("circle") //circle for each node
         .data(nodes)
         .enter()
         .append("circle")
-        .attr("cx", function(){
-            xLoc = Math.random() * w;
+        .attr("cx", function(d, i){
+            xLoc = width - ((pathLength[i+1]/pathLengthMax * width) + 20);
             sLoc.push(xLoc);
             return xLoc;
         })
         .attr("cy", function(){
-            yLoc = Math.random() * h;
+            yLoc = Math.random() * height;
             s2Loc.push(yLoc);
             return yLoc;
         })
@@ -99,7 +136,7 @@ function supVis(dat){ //visuailize data
         .enter()
         .append("text")
         .text(function(d){
-            return d.name;
+            return d.name + " " + d.id;
         })
         .attr("x", function(d, i){
             return sLoc[i] - 20
@@ -114,25 +151,28 @@ function supVis(dat){ //visuailize data
         .enter()
         .append("line")
         .attr("x1", function(d, i){
-            return sLoc[sLoc.length - i]
+            return sLoc[i]
         })
         .attr("y1", function(d, i){
-            return s2Loc[sLoc.length - i]
+            return s2Loc[i]
         })
         .attr("x2", function(d, i){
-            return sLoc[sLoc.length - s3Loc[i]]
+            return sLoc[s3Loc[i+1] - 1]
         })
         .attr("y2", function(d, i){
-            return s2Loc[sLoc.length - s3Loc[i]]
+            return s2Loc[s3Loc[i+1] - 1]
         })
         .attr("visibility", function(d, i){
-            if (s3Loc[i] === undefined) {
+            if (s3Loc[i+1] === undefined) {
                 return "hidden"
             }
             else {
                 return "visible"
             }
-        });
+        })
+        .attr("stroke-width", 5)
+        .attr("stroke", "#ff0000")
+        .attr("marker-end", "url(#Triangle)");
         console.log(s3Loc);
 
 }
