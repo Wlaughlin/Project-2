@@ -115,7 +115,22 @@ for (var i = 0; i<nodes.length; i++) {
     }
 }
 console.log(nodes);
-console.log(tierMax);
+    var countArray = new Array(tierMax +2);
+    var tierArray = new Array(tierMax + 2);
+    for (var i = 0; i < tierMax+2; i++) {
+        tierArray[i] = 0;
+        countArray[i] = 0;   
+    }
+
+    for (var i = 0; i < nodes.length; i++) {
+        if (nodes[i].tier == -1) {
+            tierArray[tierMax+1]++;
+        }
+        else {
+            tierArray[nodes[i].tier]++;
+        }
+    }
+    console.log(tierArray);
     var sLoc = [];
     var s2Loc = [];
     var svg = d3.select("#visOut") //add svg element
@@ -139,7 +154,6 @@ console.log(tierMax);
     var path = d3.selectAll("marker").append("path")
         .attr('d', 'M 0 0 L 10 5 L 0 10 z');
 
-
     svg.selectAll("circle") //circle for each node
         .data(nodes)
         .enter()
@@ -154,8 +168,15 @@ console.log(tierMax);
             sLoc.push(xLoc);
             return xLoc;
         })
-        .attr("cy", function(){
-            yLoc = Math.random() * height;
+        .attr("cy", function(d, i){
+            if (nodes[i].tier == -1) {
+                countArray[tierMax+1]++;
+                yLoc = height - (countArray[tierMax+1]/tierArray[tierMax+1] * height);
+            }
+            else {
+                countArray[nodes[i].tier]++;
+                yLoc = height - (countArray[nodes[i].tier]/tierArray[nodes[i].tier] * height);
+            }
             s2Loc.push(yLoc);
             return yLoc;
         })
