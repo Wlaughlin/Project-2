@@ -47,10 +47,10 @@ function supVis(dat){ //visuailize data
     var s = dat.supplychain.stops;
     var pathLength = [];
     var s3Loc = [];
-    var islands = [];
+    var islands = new Array(s.length);
     if(typeof(s) != 'undefined'){
         for(var i = 0; i<s.length; ++i){ //get nodes
-            nodes.push({"name" : s[i].attributes.title, "id" : s[i].id});
+            nodes.push({"name" : s[i].attributes.title, "id" : s[i].id, "tier" : 0});
         }
     }
     nodes.reverse();
@@ -58,18 +58,18 @@ function supVis(dat){ //visuailize data
         s3Loc[j] = undefined;
         pathLength[j] = 0;
     }
-    if(typeof(h) != 'undefined'){
+    if (typeof(h) != 'undefined'){
         for(var i = 0; i<h.length; ++i){ //get links
              to = h[i].to_stop_id; //target
              from = h[i].from_stop_id; //source
              s3Loc[from] = h[i].to_stop_id;
-             islands[to] = 1;
+             islands[to-1] = 1;
              links.push({"source" : from, "target" : to});
         }
     }
     console.log(links);
     var width = 640, //set width and height
-        height = 200 + 3*s.length;
+        height = 200 + 5*s.length;
     var pathLengthMax = 1;
    /* for (var m = 0; m < links.length; m++) {
         var l = m;
@@ -89,10 +89,33 @@ function supVis(dat){ //visuailize data
         }
         if (pathLength[k] > pathLengthMax) pathLengthMax = pathLength[k];
  }
-    console.log(pathLength);
-    console.log(islands);
 
-
+function tierFinder() {
+    for (var i = 0; i<links.length; i++) {
+        nodes[links[i].source-1].tier = Math.max(nodes[links[i].target-1].tier + 1, nodes[links[i].source-1].tier);
+    }
+    tierChecker();
+}
+function tierChecker() {
+    for (var i = 0; i<links.length; i++) {
+        if (nodes[links[i].source-1].tier <= nodes[links[i].target-1].tier) {
+             tierFinder();
+             break;
+        }
+    }
+}
+var tierMax = 0
+tierFinder();
+for (var i = 0; i<nodes.length; i++) {
+    if (nodes[i].tier == 0 && islands[i] != 1) {
+        nodes[i].tier = -1;
+    }
+    if (nodes[i].tier > tierMax) {
+        tierMax = nodes[i].tier;
+    }
+}
+console.log(nodes);
+console.log(tierMax);
     var sLoc = [];
     var s2Loc = [];
     var svg = d3.select("#visOut") //add svg element
@@ -122,12 +145,12 @@ function supVis(dat){ //visuailize data
         .enter()
         .append("circle")
         .attr("cx", function(d, i){
-           /* if (islands[i+1] === undefined && pathLength[i+1] == 0) {
+            if (nodes[i].tier == -1){
                 xLoc = 0;
             }
-            else {}*/
-            xLoc = width - (pathLength[i+1]/pathLengthMax * width * .8) - 50;
-           // xLoc = Math.random() * width;
+            else{ 
+                xLoc = width - (nodes[i].tier/tierMax * width * .8) - 50;
+            }
             sLoc.push(xLoc);
             return xLoc;
         })
@@ -157,26 +180,18 @@ function supVis(dat){ //visuailize data
         .data(links)
         .enter()
         .append("line")
-        .attr("x1", function(d, i){
+        .attr("x1", function(d){
             return sLoc[d.source-1]
         })
-        .attr("y1", function(d, i){
+        .attr("y1", function(d){
             return s2Loc[d.source-1]
         })
-        .attr("x2", function(d, i){
+        .attr("x2", function(d){
             return sLoc[d.target-1]
         })
-        .attr("y2", function(d, i){
+        .attr("y2", function(d){
             return s2Loc[d.target-1]
         })
-        /*.attr("visibility", function(d, i){
-            if (s3Loc[i+1] === undefined) {
-                return "hidden"
-            }
-            else {
-                return "visible"
-            }
-        })*/
         .attr("marker-end", "url(#Triangle)");
 
 }
