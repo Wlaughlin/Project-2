@@ -45,8 +45,6 @@ function supVis(dat){ //visuailize data
     var nodes = []; //list of stop objects(name)
     var h = dat.supplychain.hops;
     var s = dat.supplychain.stops;
-    var pathLength = [];
-    var s3Loc = [];
     var islands = new Array(s.length);
     if(typeof(s) != 'undefined'){
         for(var i = 0; i<s.length; ++i){ //get nodes
@@ -54,41 +52,17 @@ function supVis(dat){ //visuailize data
         }
     }
     nodes.reverse();
-    for (var j = 0; j<s.length+1; j++) {
-        s3Loc[j] = undefined;
-        pathLength[j] = 0;
-    }
     if (typeof(h) != 'undefined'){
         for(var i = 0; i<h.length; ++i){ //get links
              to = h[i].to_stop_id; //target
              from = h[i].from_stop_id; //source
-             s3Loc[from] = h[i].to_stop_id;
              islands[to-1] = 1;
              links.push({"source" : from, "target" : to});
         }
     }
-    console.log(links);
     var width = 640, //set width and height
         height = 200 + 5*s.length;
-    var pathLengthMax = 1;
-   /* for (var m = 0; m < links.length; m++) {
-        var l = m;
-        while
-            
-*/
 
- for (var k=1; k<s3Loc.length; k++) {
-        var l = k;
-        while (s3Loc[l] != undefined) {
-            pathLength[k]++;
-            l = s3Loc[l];
-            if (l< k) {
-                pathLength[k]+= pathLength[l];
-                break;
-            }
-        }
-        if (pathLength[k] > pathLengthMax) pathLengthMax = pathLength[k];
- }
 
 function tierFinder() {
     for (var i = 0; i<links.length; i++) {
@@ -114,7 +88,6 @@ for (var i = 0; i<nodes.length; i++) {
         tierMax = nodes[i].tier;
     }
 }
-console.log(nodes);
     var countArray = new Array(tierMax +2);
     var tierArray = new Array(tierMax + 2);
     for (var i = 0; i < tierMax+2; i++) {
@@ -130,7 +103,6 @@ console.log(nodes);
             tierArray[nodes[i].tier]++;
         }
     }
-    console.log(tierArray);
     var sLoc = [];
     var s2Loc = [];
     var svg = d3.select("#visOut") //add svg element
