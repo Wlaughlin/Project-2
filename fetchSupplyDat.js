@@ -71,17 +71,18 @@ function supVis(dat){
     /*calculate tier of each node
     -------------------------------------------------------note:section needs commenting*/
     function tierMeter(){
-        for (i=0; i<nodes.length; i++){
+        for (i=0; i<links.length; i++){
             var src = nodes[links[i].source - 1]; //source node
             var trg = nodes[links[i].target - 1]; //target node
-
+            //sets source node's tier to 1 greater than target node's tier, or keeps its tier if it is higher (i.e. from another link)
             src.tier = Math.max(src.tier, trg.tier + 1);
         }
         tierChecker();
     }
 
+    /* checks that for every link, the source node's tier is greater than the target's tier */
     function tierChecker(){
-        for (i=0; i<nodes.length; i++){
+        for (i=0; i<links.length; i++){
             var src = nodes[links[i].source - 1]; //source node
             var trg = nodes[links[i].target - 1]; //target node
 
@@ -93,23 +94,24 @@ function supVis(dat){
     }
     tierMeter();
     
-    var tierMax = 0;
+    var tierMax = 0; //will hold max tier level, used to make scale for horizontal spacing
+
 
     for (var i = 0; i<nodes.length; i++) {
-    if (nodes[i].tier == 0 && islands[i] != 1) {
-        nodes[i].tier = -1;
+      if (nodes[i].tier == 0 && islands[i] != 1) {
+         nodes[i].tier = -1; //if node is an island (has no links to it) and is tier 0 (links to nothing), gets tier -1
     }
-    if (nodes[i].tier > tierMax) {
-        tierMax = nodes[i].tier;
+      if (nodes[i].tier > tierMax) {
+         tierMax = nodes[i].tier; //stores highest tier
     }
 }
-    var countArray = new Array(tierMax +2);
-    var tierArray = new Array(tierMax + 2);
+    var countArray = new Array(tierMax +2); //array where each index represents a tier, and it's current value is the ith node of that tier so far
+    var tierArray = new Array(tierMax + 2); //holds # of nodes for each tier, used for vertical spacing
     for (var i = 0; i < tierMax+2; i++) {
         tierArray[i] = 0;
         countArray[i] = 0;   
     }
-
+    //puts # of nodes per tier in that tier's index in tierArray, tier -1 is index tierMax+1
     for (var i = 0; i < nodes.length; i++) {
         if (nodes[i].tier == -1) {
             tierArray[tierMax+1]++;
@@ -129,12 +131,16 @@ function supVis(dat){
         .attr("width", w)
         .attr("height", h);
 
+// This was added 
+ var g = svg.append('g')
+     .attr('id', 'viewport');
+
     /*add circles for each node
     -------------------------------------------------------note:section needs commenting*/
     var sLoc = []; //x locations for circles
     var s2Loc = []; //y locations for circles
 
-    svg.selectAll("circle") //circle for each node
+    g.selectAll("circle") //circle for each node
         .data(nodes)
         .enter()
         .append("circle")
@@ -160,11 +166,11 @@ function supVis(dat){
             s2Loc.push(yLoc); //save cy values
             return yLoc;
         })
-        .attr("r", 5);
+        .attr("r", 4);
 
     /*add labels above circle locations
     -----------------------------------------------------*/
-    svg.selectAll("text") //text for each node
+    g.selectAll("text") //text for each node
         .data(nodes)
         .enter()
         .append("text")
@@ -176,11 +182,12 @@ function supVis(dat){
         })
         .attr("y", function(d, i){
             return s2Loc[i] - 10 //get y location of circle i
-        });
+        })
+        .attr("font-size", "50%");
     
     /*add directed line for each link
     -----------------------------------------------------*/
-    svg.selectAll("line")
+    g.selectAll("line")
         .data(links)
         .enter()
         .append("line")
@@ -196,10 +203,10 @@ function supVis(dat){
         .attr("y2", function(d){
             return s2Loc[d.target-1];
         })
-        .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
+        .attr("style", "stroke:green;stroke-width:1")
         .attr("marker-end", "url(#arrow)");
 
-        svg.append("svg:marker") //add direction
+        g.append("svg:marker") //add direction
         .attr("id", "arrow")
         .attr("viewBox", "0 0 10 10")
         .attr("refX", "20")
@@ -210,6 +217,11 @@ function supVis(dat){
         .attr("orient","auto")
         .append("svg:path")
         .attr("d", "M 0 0 L 10 5 L 0 10 z") //draw triangle
-        .attr("fill", "#92E0B3");
+        .attr("fill", "blue");
+
+        $('svg').svgPan('viewport');
+
 }
+
+
 //]____________________________________________________________________end.
