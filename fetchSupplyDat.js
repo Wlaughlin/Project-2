@@ -15,6 +15,7 @@ function enter_pressed(e){
     }
     return(keyCode == 13); //return if key code is 13(enter)
 }
+
 //_______________________________________________________________________[ajax
 
 function ajaxRequest(){
@@ -60,6 +61,7 @@ function ajaxRequest(){
     xmlhttp.open("GET", "jsonLoad.php?num=" +numS, true);
     xmlhttp.send(null);
 }
+
 //_______________________________________________________________________[visualize data
 
 function supVis(dat){
@@ -95,7 +97,17 @@ function supVis(dat){
         .append("svg")
         .attr("id", "svgOut")
         .attr("width", w)
-        .attr("height", h);
+        .attr("height", h)
+        .attr("pointer-events", "all")
+        .append('svg:g')
+        .call(d3.behavior.zoom().on("zoom", redraw))
+        .append('svg:g');
+
+    function redraw(){
+        svg.attr("transform",
+            "translate(" +d3.event.translate + ")"
+            + " scale(" + d3.event.scale + ")");
+    }
 
     /*add circles for each node
     -------------------------------------------------------*/
