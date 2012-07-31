@@ -1,7 +1,9 @@
 //_______________________________________________________________________[check if user hits 'enter' to submit
+
 function enter_pressed(e){
     
-    var keyCode;
+    var keyCode; //ascii id
+    
     if(window.event){
         keyCode = window.event.keyCode; //check text input field
     }
@@ -14,32 +16,52 @@ function enter_pressed(e){
     return(keyCode == 13); //return if key code is 13(enter)
 }
 //_______________________________________________________________________[ajax
+
 function ajaxRequest(){
     
-    //create xmlHttpReq object
+    /*create xmlHttpReq object
+    -------------------------------------------------------*/
     var xmlhttp;
+    
     if (window.XMLHttpRequest){
         xmlhttp=new XMLHttpRequest();
     }
-
-    //recieve data sent from sever
+    
+    /*define reaction to response
+    -------------------------------------------------------*/
     xmlhttp.onreadystatechange=function(){
 
-        //ready?
-        if(xmlhttp.readyState == 4){
-            //pass response to supVis
-            supVis(JSON.parse(xmlhttp.responseText));
+        if(xmlhttp.readyState == 4){ //response ready?
+            var response = xmlhttp.responseText;
+            try{ //catch invalid supplychains
+                JSON.parse(response);
+            }
+            catch(err){
+                alert("Supplychain not found.");
+            }
+            response = JSON.parse(response);
+            if (response.supplychain == undefined){
+                alert(response.error);
+            }
+            supVis(response); //pass response to supVis
         }   
     }
     
-    //get form input value
-    var numS = encodeURIComponent(document.getElementById("num").value);
+    /*get form input value
+    -------------------------------------------------------*/
+    var numS = document.getElementById("num").value;
+    if (isNaN(numS)){ //check value
+        alert("Enter an integer.");
+        return;
+    }
 
-    //send input value to php
-    xmlhttp.open("POST","jsonLoad.php?num=" +numS,true);
+    /*send request
+    -------------------------------------------------------*/
+    xmlhttp.open("GET", "jsonLoad.php?num=" +numS, true);
     xmlhttp.send(null);
 }
 //_______________________________________________________________________[visualize data
+
 function supVis(dat){
 
     var links = []; //list of hop objects(source and target)
@@ -47,9 +69,8 @@ function supVis(dat){
     var h = dat.supplychain.hops;
     var s = dat.supplychain.stops;
 
-    // populate links and nodes arrays
-    // -------------------------------------------------------
-
+    /*populate links and nodes arrays
+    -------------------------------------------------------*/
     if(typeof(h) != 'undefined'){
         for(var i = 0; i<h.length; ++i){ //get links
             from = h[i].from_stop_id; //source
@@ -65,8 +86,8 @@ function supVis(dat){
     }
     nodes.reverse(); //puts list in ascending stop id order
 
-    // create svg element
-    // -------------------------------------------------------
+    /*create svg element
+    -------------------------------------------------------*/
     var w = 800, //set width and height
         h = 400;
 
@@ -76,10 +97,10 @@ function supVis(dat){
         .attr("width", w)
         .attr("height", h);
 
-    // add circles for each node
-    // -------------------------------------------------------
-    var sLoc = []; //x locations for circles
-    var s2Loc = []; //y locations for circles
+    /*add circles for each node
+    -------------------------------------------------------*/
+    var xPlaces = []; //x locations for circles
+    var yPlaces = []; //y locations for circles
 
     svg.selectAll("circle") //circle for each node
         .data(nodes)
@@ -93,7 +114,7 @@ function supVis(dat){
             else if(xLoc < 50){
                 xLoc = xLoc + 20;
             }
-            sLoc.push(xLoc); //save cx values
+            xPlaces.push(xLoc); //save cx values
             return xLoc;
         })
         .attr("cy", function(){
@@ -104,13 +125,13 @@ function supVis(dat){
             else if(yLoc < 50){
                 yLoc = yLoc + 20;
             }
-            s2Loc.push(yLoc); //save cy values
+            yPlaces.push(yLoc); //save cy values
             return yLoc;
         })
         .attr("r", 5);
 
-    // add labels above circle locations
-    // -----------------------------------------------------
+    /*add labels above circle locations
+    -----------------------------------------------------*/
     svg.selectAll("text") //text for each node
         .data(nodes)
         .enter()
@@ -119,29 +140,29 @@ function supVis(dat){
             return d.name;
         })
         .attr("x", function(d, i){
-            return sLoc[i] //get x location of circle i
+            return xPlaces[i] //get x location of circle i
         })
         .attr("y", function(d, i){
-            return s2Loc[i] - 10 //get y location of circle i
+            return yPlaces[i] - 10 //get y location of circle i
         });
     
-    // add directed line for each link
-    // -----------------------------------------------------
+    /*add directed line for each link
+    -----------------------------------------------------*/
     svg.selectAll("line")
         .data(links)
         .enter()
         .append("line")
         .attr("x1", function(d){ //start point
-            return sLoc[d.source-1];
+            return xPlaces[d.source-1];
         })
         .attr("y1", function(d){
-            return s2Loc[d.source-1];
+            return yPlaces[d.source-1];
         })
         .attr("x2", function(d){ //end point
-            return sLoc[d.target-1];
+            return xPlaces[d.target-1];
         })
         .attr("y2", function(d){
-            return s2Loc[d.target-1];
+            return yPlaces[d.target-1];
         })
         .attr("style", "stroke:rgb(0,0,0);stroke-width:2")
         .attr("marker-end", "url(#arrow)");

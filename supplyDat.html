@@ -1,13 +1,16 @@
 <html>
     <head>
         <title>supplyChainDat</title>
+        <meta name="description" content="supplychain visualization"/>
+        <meta name="keywords" content="sourcemap, supplymap"/>
+        <meta charset="UTF-8"/>
         <link rel="stylesheet" type="text/css" href="supplyDat.css">
         <script type="text/javascript"src="fetchSupplyDat.js"></script>
         <script type="text/javascript"src="http://d3js.org/d3.v2.js"></script>
     </head>
     <body>
         <h1 id='title'>Supply Chain</h1>
-        <form method="get" id='numSelect' onSubmit="return false;" onKeyPress="if(enter_pressed(event)){ajaxRequest()}">
+        <form method="GET" id='numSelect' onSubmit="return false;" onKeyPress="if(enter_pressed(event)){ajaxRequest()}">
         Enter supplychain number: <input type="text" id='num'/><br />
         <a id='snd' href="#" onclick="ajaxRequest()">submit</a>
         </form>
