@@ -1,9 +1,6 @@
 <html>
     <head>
         <title>supplyChainDat</title>
-        <meta name="description" content="supplychain visualization"/>
-        <meta name="keywords" content="sourcemap, supplymap"/>
-        <meta charset="UTF-8"/> 
         <link rel="stylesheet" type="text/css" href="supplyDat.css">
         <script type="text/javascript"src="fetchSupplyDat.js"></script>
         <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script> 
@@ -12,7 +9,7 @@
     </head>
     <body>
         <h1 id='title'>Supply Chain... I'd map that</h1>
-        <form method="GET" id='numSelect' onSubmit="return false;" onKeyPress="if(enter_pressed(event)){ajaxRequest()}">
+        <form method="get" id='numSelect' onSubmit="return false;" onKeyPress="if(enter_pressed(event)){ajaxRequest()}">
         Enter supplychain number: <input type="text" id='num'/><br />
         <a id='snd' href="#" onclick="ajaxRequest()">submit</a>
         </form>

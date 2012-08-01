@@ -1,7 +1,7 @@
 //Start__________________________________________________________________[check if user hits 'enter' to submit
 function enter_pressed(e){
     
-    var keyCode; //ascii id
+    var keyCode;
     if(window.event){
         keyCode = window.event.keyCode; //check text input field
     }
@@ -14,48 +14,29 @@ function enter_pressed(e){
     return(keyCode == 13); //return if key code is 13(enter)
 }
 //]_______________________________________________________________________[ajax
-    function ajaxRequest(){
+function ajaxRequest(){
     
-    /*create xmlHttpReq object
-    -------------------------------------------------------*/
+    //create xmlHttpReq object
     var xmlhttp;
-    
     if (window.XMLHttpRequest){
         xmlhttp=new XMLHttpRequest();
     }
-    
-    /*define reaction to response
-    -------------------------------------------------------*/
+
+    //recieve data sent from sever
     xmlhttp.onreadystatechange=function(){
 
-        if(xmlhttp.readyState == 4){ //response ready?
-            var response = xmlhttp.responseText;
-            console.log(response, JSON.parse(response));
-            try{ //catch invalid supplychains
-                JSON.parse(response);
-            }
-            catch(err){
-                alert("Supplychain not found.");
-            }
-            response = JSON.parse(response);
-            if (response.supplychain == undefined){
-                alert(response.error);
-            }
-            supVis(response); //pass response to supVis
+        //ready?
+        if(xmlhttp.readyState == 4){
+            //pass response to supVis
+            supVis(JSON.parse(xmlhttp.responseText));
         }   
     }
     
-    /*get form input value
-    -------------------------------------------------------*/
-    var numS = document.getElementById("num").value;
-    if (isNaN(numS)){ //check value
-        alert("Enter an integer.");
-        return;
-    }
+    //get form input value
+    var numS = encodeURIComponent(document.getElementById("num").value);
 
-    /*send request
-    -------------------------------------------------------*/
-    xmlhttp.open("GET", "jsonLoad.php?num=" +numS, true);
+    //send input value to php
+    xmlhttp.open("POST","jsonLoad.php?num=" +numS,true);
     xmlhttp.send(null);
 }
 //]_______________________________________________________________________[visualize data
@@ -148,24 +129,18 @@ function supVis(dat){
         .append("svg")
         .attr("id", "svgOut")
         .attr("width", w)
-        .attr("height", h)
-        .attr("pointer-events", "all")
-        .call(d3.behavior.zoom().on("zoom", redraw))
-        .append('svg:g');
+        .attr("height", h);
 
-    function redraw(){
-        svg.attr("transform",
-            "translate(" +d3.event.translate + ")"
-            + " scale(" + d3.event.scale + ")");
-    }
-
+// This was added 
+ var g = svg.append('g')
+     .attr('id', 'viewport');
 
     /*add circles for each node
     -------------------------------------------------------note:section needs commenting*/
-    var xPlaces = []; //x locations for circles
-    var yPlaces = []; //y locations for circles
+    var sLoc = []; //x locations for circles
+    var s2Loc = []; //y locations for circles
 
-    svg.selectAll("circle") //circle for each node
+    g.selectAll("circle") //circle for each node
         .data(nodes)
         .enter()
         .append("circle")
@@ -176,7 +151,7 @@ function supVis(dat){
             else{ 
                 xLoc = w - (nodes[i].tier/tierMax * w * .8) - 50;
             }
-            xPlaces.push(xLoc); //save cx values
+            sLoc.push(xLoc); //save cx values
             return xLoc;
         })
         .attr("cy", function(d, i){
@@ -188,50 +163,50 @@ function supVis(dat){
                 countArray[nodes[i].tier]++;
                 yLoc = h - (countArray[nodes[i].tier]/tierArray[nodes[i].tier] * h);
             }
-            yPlaces.push(yLoc); //save cy values
+            s2Loc.push(yLoc); //save cy values
             return yLoc;
         })
         .attr("r", 4);
 
     /*add labels above circle locations
     -----------------------------------------------------*/
-    svg.selectAll("text") //text for each node
+    g.selectAll("text") //text for each node
         .data(nodes)
         .enter()
         .append("text")
         .text(function(d){
-            return d.name;
+            return d.name + ' ' + d.tier;
         })
         .attr("x", function(d, i){
-            return xPlaces[i] //get x location of circle i
+            return sLoc[i] //get x location of circle i
         })
         .attr("y", function(d, i){
-            return yPlaces[i] - 10 //get y location of circle i
+            return s2Loc[i] - 10 //get y location of circle i
         })
         .attr("font-size", "50%");
     
     /*add directed line for each link
     -----------------------------------------------------*/
-    svg.selectAll("line")
+    g.selectAll("line")
         .data(links)
         .enter()
         .append("line")
         .attr("x1", function(d){ //start point
-            return xPlaces[d.source-1];
+            return sLoc[d.source-1];
         })
         .attr("y1", function(d){
-            return yPlaces[d.source-1];
+            return s2Loc[d.source-1];
         })
         .attr("x2", function(d){ //end point
-            return xPlaces[d.target-1];
+            return sLoc[d.target-1];
         })
         .attr("y2", function(d){
-            return yPlaces[d.target-1];
+            return s2Loc[d.target-1];
         })
         .attr("style", "stroke:green;stroke-width:1")
         .attr("marker-end", "url(#arrow)");
 
-        svg.append("svg:marker") //add direction
+        g.append("svg:marker") //add direction
         .attr("id", "arrow")
         .attr("viewBox", "0 0 10 10")
         .attr("refX", "20")
@@ -243,6 +218,8 @@ function supVis(dat){
         .append("svg:path")
         .attr("d", "M 0 0 L 10 5 L 0 10 z") //draw triangle
         .attr("fill", "blue");
+
+        $('svg').svgPan('viewport');
 
 }
 
