@@ -66,16 +66,26 @@ function supVis(dat){
     var links = []; //list of hop objects(source and target)
     var nodes = []; //list of stop objects(name)
 
-    var h = dat.supplychain.hops;
+    var lengthTotal = 0; // Combined length of all lines 
+    var hops = dat.supplychain.hops;
     var s = dat.supplychain.stops;
     var islands = new Array(s.length); //list of tier 0 nodes
 
+     /*add circles for each node
+    -------------------------------------------------------*/
+    var xPlaces = []; //x locations for circles
+    var yPlaces = []; //y locations for circles
+    
+    var w = 800, //set width and height
+        h = 200 + 5*s.length;
+
+
     /*populate links and nodes arrays
     -------------------------------------------------------*/
-    if(typeof(h) != 'undefined'){
-        for(var i = 0; i<h.length; ++i){ //get links
-            from = h[i].from_stop_id; //source
-            to = h[i].to_stop_id; //target
+    if(typeof(hops) != 'undefined'){
+        for(var i = 0; i<hops.length; ++i){ //get links
+            from = hops[i].from_stop_id; //source
+            to = hops[i].to_stop_id; //target
             //node index locations
             islands[to-1] = 1;
             links.push({"source" : from, "target" : to});
@@ -140,6 +150,42 @@ function supVis(dat){
             tierArray[nodes[i].tier]++;
         }
     }
+
+    function computeLocations() {
+        for (i=0; i < nodes.length; i++) {
+            if (nodes[i].tier == -1){
+                xLoc = 0;
+                countArray[tierMax+1]++;
+                yLoc = h - (countArray[tierMax+1]/tierArray[tierMax+1] * h);
+            }
+            else{ 
+                xLoc = w - (nodes[i].tier/tierMax * w * .8) - 50;
+                countArray[nodes[i].tier]++;
+                yLoc = h - (countArray[nodes[i].tier]/tierArray[nodes[i].tier] * h);
+            }
+            xPlaces.push(xLoc);
+            yPlaces.push(yLoc);
+        }
+    }
+    var xOne,xTwo,yOne,yTwo = 0;
+    function computeDistances() {
+        for (i = 0; i < links.length; i++) {
+            xOne = xPlaces[links[i].source - 1];
+            xTwo = xPlaces[links[i].target - 1];
+            yOne = yPlaces[links[i].source - 1];
+            yTwo = yPlaces[links[i].target - 1];
+            links[i].length = Math.sqrt(((xTwo - xOne) * (xTwo - xOne)) + ((yTwo - yOne) * (yTwo - yOne)));
+            lengthTotal += links[i].length;
+        }
+    }
+    computeLocations();
+    computeDistances();
+    console.log(links, lengthTotal); 
+
+
+
+
+
     /*create svg element
     -------------------------------------------------------*/
     var w = 800, //set width and height
@@ -159,42 +205,16 @@ function supVis(dat){
             "translate(" +d3.event.translate + ")"
             + " scale(" + d3.event.scale + ")");
     }
-
-    /*add circles for each node
-    -------------------------------------------------------*/
-    var xPlaces = []; //x locations for circles
-    var yPlaces = []; //y locations for circles
-
-    /*add circles for each node
-    -------------------------------------------------------note:section needs commenting*/
-    var xPlaces = []; //x locations for circles
-    var yPlaces = []; //y locations for circles
-
+    
     svg.selectAll("circle") //circle for each node
         .data(nodes)
         .enter()
         .append("circle")
         .attr("cx", function(d, i){
-            if (nodes[i].tier == -1){
-                xLoc = 0;
-            }
-            else{ 
-                xLoc = w - (nodes[i].tier/tierMax * w * .8) - 50;
-            }
-            xPlaces.push(xLoc); //save cx values
-            return xLoc;
+            return xPlaces[i];
         })
         .attr("cy", function(d, i){
-            if (nodes[i].tier == -1) {
-                countArray[tierMax+1]++;
-                yLoc = h - (countArray[tierMax+1]/tierArray[tierMax+1] * h);
-            }
-            else {
-                countArray[nodes[i].tier]++;
-                yLoc = h - (countArray[nodes[i].tier]/tierArray[nodes[i].tier] * h);
-            }
-            yPlaces.push(yLoc); //save cy values
-            return yLoc;
+            return yPlaces[i];
         })
         .attr("r", 4);
 
