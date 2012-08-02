@@ -161,14 +161,15 @@ function supVis(dat){
             else{ 
                 xLoc = w - (nodes[i].tier/tierMax * w * .8) - 50;
                 countArray[nodes[i].tier]++;
-                yLoc = h - (countArray[nodes[i].tier]/tierArray[nodes[i].tier] * h);
+                yLoc = h - (countArray[nodes[i].tier]/tierArray[nodes[i].tier] * h * .8) - 40;
             }
             xPlaces.push(xLoc);
             yPlaces.push(yLoc);
         }
     }
     var xOne,xTwo,yOne,yTwo = 0;
-    function computeDistances() {
+    function computeDistance() {
+        lengthTotal = 0;
         for (i = 0; i < links.length; i++) {
             xOne = xPlaces[links[i].source - 1];
             xTwo = xPlaces[links[i].target - 1];
@@ -177,11 +178,62 @@ function supVis(dat){
             links[i].length = Math.sqrt(((xTwo - xOne) * (xTwo - xOne)) + ((yTwo - yOne) * (yTwo - yOne)));
             lengthTotal += links[i].length;
         }
+    return lengthTotal;
     }
     computeLocations();
-    computeDistances();
-    console.log(links, lengthTotal); 
 
+
+function changePlaces(n) {
+    for (i=0;i<nodes.length;i++) {
+        if (nodes[i].tier == n) {
+            yPlaces[i] = h - yPlaces[i];
+        }
+    }  
+}
+function shift(n, dir) {
+    for (i=0;i<nodes.length;i++) {
+        if (nodes[i].tier == n) {
+            if (dir=="up") {
+                yPlaces[i]+= .1*h;
+            }
+            else {
+                yPlaces[i]-= .1*h;
+            }
+        }
+    }
+}
+
+leastDistance = computeDistance();
+for (n=0; n<=tierMax; n++) {
+    changePlaces(n);
+    temp = computeDistance();
+    console.log(temp, leastDistance);
+    if (temp < leastDistance) {
+        alert("flipped tier " + n);
+        leastDistance = temp;
+        }
+    else {
+        changePlaces(n);
+    }
+    shift(n, "up");
+    temp = computeDistance();
+    if (temp < leastDistance) {
+        alert("shifted tier " + n + " up");
+        leastDistance = temp;
+    }
+    else {
+        shift(n, "down");
+        shift(n, "down");
+        temp = computeDistance();
+        if (temp < leastDistance) {
+            alert("shifted tier " + n + " down");
+            leastDistance = temp;
+        }
+        else {
+            shift(n, "up");
+        }    
+    }
+}
 
 
 
