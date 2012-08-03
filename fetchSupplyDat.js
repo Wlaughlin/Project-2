@@ -66,7 +66,7 @@ function supVis(dat){
     var links = []; //list of hop objects(source and target)
     var nodes = []; //list of stop objects(name)
 
-    var lengthTotal = 0; // Combined length of all lines 
+    var distanceTotal = 0; // Combined length of all lines 
     var hops = dat.supplychain.hops;
     var s = dat.supplychain.stops;
     var islands = new Array(s.length); //list of tier 0 nodes
@@ -84,10 +84,10 @@ function supVis(dat){
     -------------------------------------------------------*/
     if(typeof(s) != 'undefined'){
         for(var i = 0; i<s.length; ++i){ //get nodes
-            nodes.push({"name" : s[i].attributes.title, "tier" : 0, "links" : []});
+            nodes.push({"name" : s[i].attributes.title, "tier" : 0, "links" : [], "id" : s[i].id});
         }
     } 
-    nodes.reverse();
+    nodes.reverse(); //puts list in ascending stop id order. node index i = id - 1 
     if(typeof(hops) != 'undefined'){
         for(var i = 0; i<hops.length; ++i){ //get links
             from = hops[i].from_stop_id; //source
@@ -96,14 +96,13 @@ function supVis(dat){
             islands[to-1] = 1;
             nodes[from-1].links.push(i);
             nodes[to-1].links.push(i);
-            links.push({"source" : from, "target" : to});
+            links.push({"source" : from, "target" : to, "distance" : 0});
         }
     }
-    console.log(nodes, links); 
-    /*calculate tier of each node
+    
+/*calculate tier of each node
     -------------------------------------------------------note:section needs commenting*/
     function tierMeter(){
-        console.log(links,nodes);
         for (i=0; i<links.length; i++){
             var src = nodes[links[i].source - 1]; //source node
             var trg = nodes[links[i].target - 1]; //target node
@@ -172,20 +171,21 @@ function supVis(dat){
     }
     var xOne,xTwo,yOne,yTwo = 0;
     function computeDistance() {
-        lengthTotal = 0;
+        distanceTotal = 0;
         for (i = 0; i < links.length; i++) {
             xOne = xPlaces[links[i].source - 1];
             xTwo = xPlaces[links[i].target - 1];
             yOne = yPlaces[links[i].source - 1];
             yTwo = yPlaces[links[i].target - 1];
-            links[i].length = Math.sqrt(((xTwo - xOne) * (xTwo - xOne)) + ((yTwo - yOne) * (yTwo - yOne)));
-            lengthTotal += links[i].length;
+            links[i].distance = Math.sqrt(((xTwo - xOne) * (xTwo - xOne)) + ((yTwo - yOne) * (yTwo - yOne)));
+            distanceTotal += links[i].distance;
         }
-    return lengthTotal;
+    return distanceTotal;
     }
     computeLocations();
+    computeDistance();
 
-
+/*
 function changePlaces(n) {
     for (i=0;i<nodes.length;i++) {
         if (nodes[i].tier == n) {
@@ -236,7 +236,77 @@ for (n=0; n<=tierMax; n++) {
         }    
     }
 }
+*/
 
+// starting new method of changing things
+
+// Calculates combined distance of links from or to node n before and after shift
+// If new position yields shorter distance, updates distance property on links and returns true
+function computeNewDistance(n) {
+    newDistances = [];
+    oldDistance = 0;
+    newDistance = 0;
+    tempNewDistance = 0;
+     for (i = 0; i < nodes[n].links.length; i++) {
+         oldDistance += links[nodes[n].links[i]].distance;
+         xOne = xPlaces[links[n].source - 1];
+         xTwo = xPlaces[links[n].target - 1];
+         yOne = yPlaces[links[n].source - 1];
+         yTwo = yPlaces[links[n].target - 1];
+         tempNewDistance = Math.sqrt(((xTwo - xOne) * (xTwo - xOne)) + ((yTwo - yOne) * (yTwo - yOne)));
+         newDistances.push(tempNewDistance);
+         newDistance += tempNewDistance;
+    }
+    if (newDistance < oldDistance) {
+          for (i = 0; i < nodes[n].links.length; i++) {
+              links[nodes[n].links[i]].distance = newDistances[i];
+        }
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
+//shifts node n up if dir = "up", down if dir = anythingelse
+function shift(n, dir) {
+            if (dir=="up") {
+                yPlaces[n]-= 0.05*h;
+            }
+            else {
+                yPlaces[n]+= 0.05*h;
+            }
+}
+for (p = 0; p < nodes.length; p++) {
+    moved = 0;
+    if (nodes[p].tier != -1) {
+        shift(p, "up"); // shift up
+        while (computeNewDistance(p)) { // test, if new distance is longer, shift down
+            shift(p, "up");
+            moved = 1;
+        }
+        if (moved == 1) { 
+            moved = 0;
+            continue;
+        }
+        else {
+            shift(p, "down");
+            shift(p, "down"); //shift down twice, once to get it to normal, again for down shift,
+            while (computeNewDistance(p)) {
+                shift(p, "down");
+                moved = 1;
+            }
+            if ( moved == 1) {
+                moved = 0;
+                continue;
+            }
+            else {
+                moved = 0;
+                shift(p, "up"); // shifts back to normal
+            }
+        }
+    }
+}
 
 
 
@@ -279,7 +349,7 @@ for (n=0; n<=tierMax; n++) {
         .enter()
         .append("text")
         .text(function(d){
-            return d.name + ' ' + d.tier;
+            return d.name + ' ' + d.id;
         })
         .attr("x", function(d, i){
             return xPlaces[i] //get x location of circle i
