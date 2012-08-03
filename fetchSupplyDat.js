@@ -82,25 +82,28 @@ function supVis(dat){
 
     /*populate links and nodes arrays
     -------------------------------------------------------*/
+    if(typeof(s) != 'undefined'){
+        for(var i = 0; i<s.length; ++i){ //get nodes
+            nodes.push({"name" : s[i].attributes.title, "tier" : 0, "links" : []});
+        }
+    } 
+    nodes.reverse();
     if(typeof(hops) != 'undefined'){
         for(var i = 0; i<hops.length; ++i){ //get links
             from = hops[i].from_stop_id; //source
             to = hops[i].to_stop_id; //target
             //node index locations
             islands[to-1] = 1;
+            nodes[from-1].links.push(i);
+            nodes[to-1].links.push(i);
             links.push({"source" : from, "target" : to});
         }
     }
-   if(typeof(s) != 'undefined'){
-        for(var i = 0; i<s.length; ++i){ //get nodes
-            nodes.push({"name" : s[i].attributes.title, "tier" : 0});
-        }
-    }
-    nodes.reverse(); //puts list in ascending stop id order
-    
+    console.log(nodes, links); 
     /*calculate tier of each node
     -------------------------------------------------------note:section needs commenting*/
     function tierMeter(){
+        console.log(links,nodes);
         for (i=0; i<links.length; i++){
             var src = nodes[links[i].source - 1]; //source node
             var trg = nodes[links[i].target - 1]; //target node
@@ -207,7 +210,6 @@ leastDistance = computeDistance();
 for (n=0; n<=tierMax; n++) {
     changePlaces(n);
     temp = computeDistance();
-    console.log(temp, leastDistance);
     if (temp < leastDistance) {
         alert("flipped tier " + n);
         leastDistance = temp;
@@ -218,7 +220,7 @@ for (n=0; n<=tierMax; n++) {
     shift(n, "up");
     temp = computeDistance();
     if (temp < leastDistance) {
-        alert("shifted tier " + n + " up");
+        alert("shifted tier " + n + " down");
         leastDistance = temp;
     }
     else {
@@ -226,7 +228,7 @@ for (n=0; n<=tierMax; n++) {
         shift(n, "down");
         temp = computeDistance();
         if (temp < leastDistance) {
-            alert("shifted tier " + n + " down");
+            alert("shifted tier " + n + " up");
             leastDistance = temp;
         }
         else {
