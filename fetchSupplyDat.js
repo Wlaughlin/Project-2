@@ -269,14 +269,16 @@ function computeNewDistance(n) {
 }
 
 //shifts node n up if dir = "up", down if dir = anythingelse
+var shiftAmount = 0.01*h;
 function shift(n, dir) {
-            if (dir=="up") {
-                yPlaces[n]-= 0.05*h;
+            if (dir=="up" && yPlaces[n] > 0) {
+                yPlaces[n]-= shiftAmount;
             }
             else {
-                yPlaces[n]+= 0.05*h;
+                yPlaces[n]+= shiftAmount;
             }
 }
+function manipulateNodes() {
 for (p = 0; p < nodes.length; p++) {
     moved = 0;
     if (nodes[p].tier != -1) {
@@ -290,7 +292,6 @@ for (p = 0; p < nodes.length; p++) {
             continue;
         }
         else {
-            shift(p, "down");
             shift(p, "down"); //shift down twice, once to get it to normal, again for down shift,
             while (computeNewDistance(p)) {
                 shift(p, "down");
@@ -307,9 +308,10 @@ for (p = 0; p < nodes.length; p++) {
         }
     }
 }
-
-
-
+}
+console.log(computeDistance());
+manipulateNodes();   
+console.log(computeDistance());
     /*create svg element
     -------------------------------------------------------*/
     var w = 800, //set width and height
