@@ -100,7 +100,7 @@ function supVis(dat){
         }
     }
     
-/*calculate tier of each node
+    /*calculate tier of each node
     -------------------------------------------------------note:section needs commenting*/
     function tierMeter(){
         for (i=0; i<links.length; i++){
@@ -184,59 +184,6 @@ function supVis(dat){
     }
     computeLocations();
     computeDistance();
-
-/*
-function changePlaces(n) {
-    for (i=0;i<nodes.length;i++) {
-        if (nodes[i].tier == n) {
-            yPlaces[i] = h - yPlaces[i];
-        }
-    }  
-}
-function shift(n, dir) {
-    for (i=0;i<nodes.length;i++) {
-        if (nodes[i].tier == n) {
-            if (dir=="up") {
-                yPlaces[i]+= .1*h;
-            }
-            else {
-                yPlaces[i]-= .1*h;
-            }
-        }
-    }
-}
-
-leastDistance = computeDistance();
-for (n=0; n<=tierMax; n++) {
-    changePlaces(n);
-    temp = computeDistance();
-    if (temp < leastDistance) {
-        alert("flipped tier " + n);
-        leastDistance = temp;
-        }
-    else {
-        changePlaces(n);
-    }
-    shift(n, "up");
-    temp = computeDistance();
-    if (temp < leastDistance) {
-        alert("shifted tier " + n + " down");
-        leastDistance = temp;
-    }
-    else {
-        shift(n, "down");
-        shift(n, "down");
-        temp = computeDistance();
-        if (temp < leastDistance) {
-            alert("shifted tier " + n + " up");
-            leastDistance = temp;
-        }
-        else {
-            shift(n, "up");
-        }    
-    }
-}
-*/
 
 // starting new method of changing things
 
